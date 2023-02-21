@@ -15,6 +15,12 @@ export class LotteryController {
     private loteriaService: LotteryService,
   ) { }
 
+ 
+
+  @Get(':lottery')
+  findAllLottery(@Param('lottery') lottery: string) {
+    return this.loteriaService.findResultsAll(lottery);
+  }
 
 
   @Get(':lottery/latest')

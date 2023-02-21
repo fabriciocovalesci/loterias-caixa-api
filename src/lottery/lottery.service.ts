@@ -59,6 +59,10 @@ export class LotteryService {
     return type.findOne(concurso);
   }
 
+  findResultsAll(lottery: string) {
+    const type = this.typeLottery(lottery);
+    return type.findAll();
+  }
 
 
   registeredLotteries(lottery: string) {

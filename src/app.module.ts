@@ -19,7 +19,7 @@ import { LotteryModule } from './lottery/lottery.module';
       }
     ),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
 export class AppModule {}
