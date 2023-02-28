@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {  Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateLotteryDto } from "src/lottery/dto/create-lottery.dto";

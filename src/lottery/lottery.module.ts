@@ -20,10 +20,12 @@ import { MongoTimemaniaRepository } from './repositories/mongo/mongo.timemania.r
 import { MongoDiaDeSorteRepository } from './repositories/mongo/mongo.diadesorte.repository';
 import { MongoLotofacilRepository } from './repositories/mongo/mongo.lotofacil.repository';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       { name: Lotofacil.name, schema: LotofacilSchema },
       { name: Lotomania.name, schema: LotomaniaSchema },
