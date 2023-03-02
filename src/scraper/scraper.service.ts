@@ -17,6 +17,7 @@ import { MongoLotofacilRepository } from 'src/lottery/repositories/mongo/mongo.l
 import { MongoQuinaRepository } from 'src/lottery/repositories/mongo/mongo.quina.repository';
 import { MongoLotomaniaRepository } from 'src/lottery/repositories/mongo/mongo.lotomania.repository';
 import { MongoMegasenaRepository } from 'src/lottery/repositories/mongo/mongo.megasena.repository';
+import { MongoDiaDeSorteRepository } from 'src/lottery/repositories/mongo/mongo.diadesorte.repository';
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ScraperService {
         private quinaRepository: MongoQuinaRepository,
         private lotomaniaRepository: MongoLotomaniaRepository,
         private megasenaRepository : MongoMegasenaRepository,
+        private diadesorteRepository : MongoDiaDeSorteRepository,
         @Inject("EventEmitter")
         private eventEmitter: EventEmitter
         ) {}
@@ -105,23 +107,22 @@ export class ScraperService {
     }
 
 
-    // @Cron("*/15 21-23 * * 2,4,6")
+    @Cron("*/15 21-23 * * 2,4,6")
     // @Cron("*/15 * * * * 1-6")
     async crawlerDiaDeSorte(){
         this.logger.warn("Running Cron job - Dia de Sorte");
 
-        // const lotofacilMongo: any = await this.lotofacilRepository.findLatest();
-        const url = `${this.baseUrl}/dia-de-sorte/resultado.php?concurso=${716}`;
+        const diadeSorteMongo: any = await this.diadesorteRepository.findLatest();
+          
+        const url = `${this.baseUrl}/dia-de-sorte/resultado.php?concurso=${diadeSorteMongo?.proxConcurso}`;
         const html = await (await firstValueFrom(this.http.get(url))).data;
         const scrapper = new DiaDeSorteSpyder(html);
         const diadesorte: Loteria = scrapper.start(); 
-        console.log(diadesorte);
-        
     
-        // if (lotofacil && lotofacilMongo?.concurso < lotofacil?.concurso){
-        //     this.eventEmitter.emit('lotofacil.created', new LoteriaCreatedEvent(lotofacil));
-        //    this.logger.log(`Inserindo no banco de dados, concurso ${lotofacil?.concurso}.`)
-        // }
+        if (diadeSorteMongo && diadeSorteMongo?.concurso < diadesorte?.concurso){
+            this.eventEmitter.emit('diadesorte.created', new LoteriaCreatedEvent(diadesorte));
+            this.logger.log(`Inserindo no banco de dados, concurso ${diadesorte?.concurso}.`)
+        }
     }
 
 

@@ -61,7 +61,7 @@ export class DiaDeSorteSpyder {
 
     getConcurso(): void{
         try {
-            const concurso = this.$("form h1")?.first()?.text()?.match(/\d{4}/g)[0];
+            const concurso = this.$("form h1")?.first()?.text()?.match(/\d{3}/g)[0];
             this.objLoteria.concurso = concurso ? parseInt(concurso) : 0
         } catch (error) {
             this.logger.error(error);
