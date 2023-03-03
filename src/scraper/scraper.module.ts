@@ -9,6 +9,7 @@ import { PublishMegasenaCreatedListener } from './listeners/publish-megasena-cre
 import { PublishQuinaCreatedListener } from './listeners/publish-quina-created.listener';
 import { LotteryModule } from 'src/lottery/lottery.module';
 import { PublishDiaDeSorteScraperCreatedListener } from './listeners/publish-diadesorte-created.listener';
+import { PublishTimemaniaScraperCreatedListener } from './listeners/publish-timemania-created.listener';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PublishDiaDeSorteScraperCreatedListener } from './listeners/publish-dia
     PublishMegasenaCreatedListener,
     PublishQuinaCreatedListener,
     PublishDiaDeSorteScraperCreatedListener,
+    PublishTimemaniaScraperCreatedListener,
     {
       provide: 'EventEmitter',
       useExisting: EventEmitter2,

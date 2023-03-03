@@ -18,6 +18,7 @@ import { MongoQuinaRepository } from 'src/lottery/repositories/mongo/mongo.quina
 import { MongoLotomaniaRepository } from 'src/lottery/repositories/mongo/mongo.lotomania.repository';
 import { MongoMegasenaRepository } from 'src/lottery/repositories/mongo/mongo.megasena.repository';
 import { MongoDiaDeSorteRepository } from 'src/lottery/repositories/mongo/mongo.diadesorte.repository';
+import { MongoTimemaniaRepository } from 'src/lottery/repositories/mongo/mongo.timemania.repository';
 
 
 @Injectable()
@@ -33,6 +34,7 @@ export class ScraperService {
         private lotomaniaRepository: MongoLotomaniaRepository,
         private megasenaRepository : MongoMegasenaRepository,
         private diadesorteRepository : MongoDiaDeSorteRepository,
+        private timemaniaRepository : MongoTimemaniaRepository,
         @Inject("EventEmitter")
         private eventEmitter: EventEmitter
         ) {}
@@ -119,31 +121,29 @@ export class ScraperService {
         const scrapper = new DiaDeSorteSpyder(html);
         const diadesorte: Loteria = scrapper.start(); 
     
-        if (diadeSorteMongo && diadeSorteMongo?.concurso < diadesorte?.concurso){
+        if (diadesorte && diadeSorteMongo?.concurso < diadesorte?.concurso){
             this.eventEmitter.emit('diadesorte.created', new LoteriaCreatedEvent(diadesorte));
             this.logger.log(`Inserindo no banco de dados, concurso ${diadesorte?.concurso}.`)
         }
     }
 
 
-    // @Cron("*/15 21-23 * * 2,4,6")
+    @Cron("*/15 21-23 * * 2,4,6")
     // @Cron("*/15 * * * * 1-6")
     async crawlerTimeMania(){
         this.logger.warn("Running Cron job - Timemania");
 
-        // const lotomaniMongo: any = await this.lotomaniaRepository.findLatest();
+        const timemaniaMongo: any = await this.timemaniaRepository.findLatest();
      
-        const url = `${this.baseUrl}/lotofacil/resultado-timemania.php?concurso=${1892}`;
+        const url = `${this.baseUrl}/lotofacil/resultado-timemania.php?concurso=${timemaniaMongo?.proxConcurso}`;
         const html = await (await firstValueFrom(this.http.get(url))).data;
         const scrapper = new TimemaniaSpyder(html);
-        const timemania: Loteria = scrapper.start(); 
-        console.log(timemania);
-        
+        const timemania: Loteria = scrapper.start();         
     
-        // if (lotofacil && lotomaniMongo?.concurso < lotofacil?.concurso){
-        //     this.eventEmitter.emit('lotofacil.created', new LoteriaCreatedEvent(lotofacil));
-        //    this.logger.log(`Inserindo no banco de dados, concurso ${lotofacil?.concurso}.`)
-        // }
+        if (timemania && timemaniaMongo?.concurso < timemania?.concurso){
+            this.eventEmitter.emit('timemania.created', new LoteriaCreatedEvent(timemania));
+           this.logger.log(`Inserindo no banco de dados, concurso ${timemania?.concurso}.`)
+        }
     }
 
 
