@@ -19,6 +19,7 @@ import { MongoLotomaniaRepository } from 'src/lottery/repositories/mongo/mongo.l
 import { MongoMegasenaRepository } from 'src/lottery/repositories/mongo/mongo.megasena.repository';
 import { MongoDiaDeSorteRepository } from 'src/lottery/repositories/mongo/mongo.diadesorte.repository';
 import { MongoTimemaniaRepository } from 'src/lottery/repositories/mongo/mongo.timemania.repository';
+import { MongoSuperSeteRepository } from 'src/lottery/repositories/mongo/mongo.supersete.repository';
 
 
 @Injectable()
@@ -35,6 +36,7 @@ export class ScraperService {
         private megasenaRepository : MongoMegasenaRepository,
         private diadesorteRepository : MongoDiaDeSorteRepository,
         private timemaniaRepository : MongoTimemaniaRepository,
+        private superseteRepository : MongoSuperSeteRepository,
         @Inject("EventEmitter")
         private eventEmitter: EventEmitter
         ) {}
@@ -147,23 +149,22 @@ export class ScraperService {
     }
 
 
-    //  @Cron("*/15 21-23 * * 1,3,5")
+     @Cron("*/15 21-23 * * 1,3,5")
+    // @Cron("*/15 * * * * 1-6")
     async crawlerSuperSete(){
         this.logger.warn("Running Cron job - Super Sete");
 
-        // const lotofacilMongo: any = await this.lotofacilRepository.findLatest();
+        const superseteMongo: any = await this.superseteRepository.findLatest();
       
-        const url = `${this.baseUrl}/lotofacil/resultado-super-sete.php?concurso=${342}`;
+        const url = `${this.baseUrl}/lotofacil/resultado-super-sete.php?concurso=${superseteMongo?.proxConcurso}`;
         const html = await (await firstValueFrom(this.http.get(url))).data;
         const scrapper = new SuperSeteSpyder(html);
-        const supersete: Loteria = scrapper.start(); 
-        console.log(supersete);
-        
+        const supersete: Loteria = scrapper.start();     
     
-        // if (lotofacil && lotofacilMongo?.concurso < lotofacil?.concurso){
-        //     this.eventEmitter.emit('lotofacil.created', new LoteriaCreatedEvent(lotofacil));
-        //    this.logger.log(`Inserindo no banco de dados, concurso ${lotofacil?.concurso}.`)
-        // }
+        if (supersete && superseteMongo?.concurso < supersete?.concurso){
+            this.eventEmitter.emit('supersete.created', new LoteriaCreatedEvent(supersete));
+           this.logger.log(`Inserindo no banco de dados, concurso ${supersete?.concurso}.`)
+        }
     }
         
 

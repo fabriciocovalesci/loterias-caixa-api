@@ -43,8 +43,10 @@ export class LotteryService {
         return this.duplasena;
       case "timemania":
         return this.timemania;
-        case "diadesorte":
+      case "diadesorte":
         return this.diadesorte;
+      case "supersete":
+        return this.supersete;
     }
   }
 

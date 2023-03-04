@@ -33,7 +33,7 @@ export class SuperSeteSpyder {
 
     checkRateio(){
         try {           
-            const rateio: boolean = this.$("div#res-c-3 div.res-acu").text().includes("RATEIO EM") ? true : false
+            const rateio: boolean = this.$("div#resultado-col-3 div.res-acu").text().includes("RATEIO EM") ? true : false
             return rateio
         } catch (error) {
             this.logger.error(error);

@@ -10,6 +10,7 @@ import { PublishQuinaCreatedListener } from './listeners/publish-quina-created.l
 import { LotteryModule } from 'src/lottery/lottery.module';
 import { PublishDiaDeSorteScraperCreatedListener } from './listeners/publish-diadesorte-created.listener';
 import { PublishTimemaniaScraperCreatedListener } from './listeners/publish-timemania-created.listener';
+import { PublishSuperSeteScraperCreatedListener } from './listeners/publish-supersete-created.listener';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PublishTimemaniaScraperCreatedListener } from './listeners/publish-time
     PublishQuinaCreatedListener,
     PublishDiaDeSorteScraperCreatedListener,
     PublishTimemaniaScraperCreatedListener,
+    PublishSuperSeteScraperCreatedListener,
     {
       provide: 'EventEmitter',
       useExisting: EventEmitter2,
