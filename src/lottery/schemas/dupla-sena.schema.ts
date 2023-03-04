@@ -37,6 +37,9 @@ export class DuplaSena {
   dezenas: string[];
 
   @Prop([String])
+  dezenasSegundoSorteio: string[];
+
+  @Prop([String])
   dezenasOrdemSorteio: string[];
 
   @Prop([Object])

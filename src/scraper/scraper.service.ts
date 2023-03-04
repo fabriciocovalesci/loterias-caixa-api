@@ -20,6 +20,7 @@ import { MongoMegasenaRepository } from 'src/lottery/repositories/mongo/mongo.me
 import { MongoDiaDeSorteRepository } from 'src/lottery/repositories/mongo/mongo.diadesorte.repository';
 import { MongoTimemaniaRepository } from 'src/lottery/repositories/mongo/mongo.timemania.repository';
 import { MongoSuperSeteRepository } from 'src/lottery/repositories/mongo/mongo.supersete.repository';
+import { MongoDulpaSenaRepository } from 'src/lottery/repositories/mongo/mongo.duplasena.repository';
 
 
 @Injectable()
@@ -37,13 +38,13 @@ export class ScraperService {
         private diadesorteRepository : MongoDiaDeSorteRepository,
         private timemaniaRepository : MongoTimemaniaRepository,
         private superseteRepository : MongoSuperSeteRepository,
+        private duplasenaRepository : MongoDulpaSenaRepository,
         @Inject("EventEmitter")
         private eventEmitter: EventEmitter
         ) {}
 
 
     @Cron("*/15 21-23 * * 1-6")
-    // @Cron("*/30 * * * * 1-6")
     async crawlerQuina(){
         this.logger.warn("Running Cron job - Quina")
         const quinaMongo: any = await this.quinaRepository.findLatest();        
@@ -62,7 +63,6 @@ export class ScraperService {
 
 
     @Cron("*/15 21-23 * * 1,3,5")
-    // @Cron("*/30 * * * * 1-6")
     async crawlerLotoMania(){
         this.logger.warn("Running Cron job - Lotomania");
         const maniaMongo: any = await this.lotomaniaRepository.findLatest();        
@@ -79,7 +79,6 @@ export class ScraperService {
 
 
     @Cron("*/15 21-23 * * 3,6")
-    // @Cron("*/30 * * * * 1-6")
     async crawlerMegaSena(){
         this.logger.warn("Running Cron job - Megasena")
         const megaMongo: any = await this.megasenaRepository.findLatest();
@@ -95,7 +94,6 @@ export class ScraperService {
     }
 
     @Cron("*/15 21-23 * * 1-6")
-    // @Cron("*/30 * * * * 1-6")
     async crawlerLotoFacil(){
         this.logger.warn("Running Cron job - Lotofacil")
         const lotofacilMongo: any = await this.lotofacilRepository.findLatest();
@@ -112,7 +110,6 @@ export class ScraperService {
 
 
     @Cron("*/15 21-23 * * 2,4,6")
-    // @Cron("*/15 * * * * 1-6")
     async crawlerDiaDeSorte(){
         this.logger.warn("Running Cron job - Dia de Sorte");
 
@@ -131,7 +128,6 @@ export class ScraperService {
 
 
     @Cron("*/15 21-23 * * 2,4,6")
-    // @Cron("*/15 * * * * 1-6")
     async crawlerTimeMania(){
         this.logger.warn("Running Cron job - Timemania");
 
@@ -150,7 +146,6 @@ export class ScraperService {
 
 
      @Cron("*/15 21-23 * * 1,3,5")
-    // @Cron("*/15 * * * * 1-6")
     async crawlerSuperSete(){
         this.logger.warn("Running Cron job - Super Sete");
 
@@ -168,23 +163,21 @@ export class ScraperService {
     }
         
 
-    // @Cron("*/15 21-23 * * 1,3,5")
+    @Cron("*/15 21-23 * * 1,3,5")
     async crawlerDuplaSena(){
         this.logger.warn("Running Cron job - Dupla Sena");
 
-        // const lotofacilMongo: any = await this.lotofacilRepository.findLatest();
+        const duplasenaMongo: any = await this.duplasenaRepository.findLatest();
     
-        const url = `${this.baseUrl}/dupla-sena/resultado.php?concurso=${2479}`;
+        const url = `${this.baseUrl}/dupla-sena/resultado.php?concurso=${duplasenaMongo?.proxConcurso}`;
         const html = await (await firstValueFrom(this.http.get(url))).data;
-        const scrapper = new DuplaSenaSpyder(html);
-        const supersete: Loteria = scrapper.start(); 
-        // console.log(supersete);
-        
+        const scrapper = new DuplaSenaSpyder(html, duplasenaMongo?.concurso);
+        const duplasena: Loteria = scrapper.start();        
     
-        // if (lotofacil && lotofacilMongo?.concurso < lotofacil?.concurso){
-        //     this.eventEmitter.emit('lotofacil.created', new LoteriaCreatedEvent(lotofacil));
-        //    this.logger.log(`Inserindo no banco de dados, concurso ${lotofacil?.concurso}.`)
-        // }
+        if (duplasena && duplasenaMongo?.concurso < duplasena?.concurso){
+            this.eventEmitter.emit('duplasena.created', new LoteriaCreatedEvent(duplasena));
+           this.logger.log(`Inserindo no banco de dados, concurso ${duplasena?.concurso}.`)
+        }
     }
 
 }

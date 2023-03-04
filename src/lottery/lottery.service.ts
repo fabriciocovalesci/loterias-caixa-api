@@ -2,6 +2,7 @@ import {  Injectable } from '@nestjs/common';
 import { LotteryEnum } from './config/lottery.enum';
 import {validatorParamsLottery} from './helpers/lottery.helper';
 import { MongoDiaDeSorteRepository } from './repositories/mongo/mongo.diadesorte.repository';
+import { MongoDulpaSenaRepository } from './repositories/mongo/mongo.duplasena.repository';
 import { MongoLotofacilRepository } from './repositories/mongo/mongo.lotofacil.repository';
 import { MongoLotomaniaRepository } from './repositories/mongo/mongo.lotomania.repository';
 import { MongoMegasenaRepository } from './repositories/mongo/mongo.megasena.repository';
@@ -21,7 +22,7 @@ export class LotteryService {
     private lotomania: MongoLotomaniaRepository,
     private megasena: MongoMegasenaRepository,
     private quina: MongoQuinaRepository,
-    private duplasena: MongoMegasenaRepository,
+    private duplasena: MongoDulpaSenaRepository,
     private diadesorte: MongoDiaDeSorteRepository,
     private supersete: MongoSuperSeteRepository,
     private timemania: MongoTimemaniaRepository
@@ -30,6 +31,7 @@ export class LotteryService {
 
   typeLottery(lottery: string) {
     const type: string | object = validatorParamsLottery(lottery);
+    
     switch (type[1]) {
       case "lotofacil":
         return this.lotofacil;

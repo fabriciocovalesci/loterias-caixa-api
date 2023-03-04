@@ -11,6 +11,7 @@ interface Premiacoes {
     acertos: string;
     ganhadores: string;
     premio: string;
+    faixa?: number;
 }
 
 export class Lottery {

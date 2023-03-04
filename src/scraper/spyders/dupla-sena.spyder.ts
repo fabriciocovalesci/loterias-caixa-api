@@ -8,12 +8,14 @@ import { Loteria } from "../loteria.entity";
 export class DuplaSenaSpyder {
     private objLoteria: Loteria = {}
     private $: any;
+    private concursoCurrent: number;
 
     private readonly logger = new Logger(DuplaSenaSpyder.name);
 
 
-    constructor(html) {
+    constructor(html, concursoCurrent: number) {
         this.$ = load(html);
+        this.concursoCurrent = concursoCurrent;
     }
 
 
@@ -35,6 +37,15 @@ export class DuplaSenaSpyder {
         try {
             const rateio: boolean = this.$("div#res-c-3 div.res-acu").text().includes("RATEIO EM") ? true : false
             return rateio
+        } catch (error) {
+            this.logger.error(error);
+        }
+    }
+
+    checkConcurso() {
+        try {
+            const concurso = this.$("form > h1")?.first()?.text()?.match(/\d{4}/g)[0];
+            return concurso ? parseInt(concurso) : 0
         } catch (error) {
             this.logger.error(error);
         }
@@ -209,9 +220,10 @@ export class DuplaSenaSpyder {
 
     extract(): void {
         try {
-            if (this.checkRateio() === true) {
+            if (this.checkConcurso() !== 0 &&  this.checkConcurso() === this.concursoCurrent) {
                 this.logger.debug("Resultado ainda não realizado!!");
-            } else {
+            } 
+            else if (this.checkConcurso() > this.concursoCurrent){
                 this.logger.log("Resultado disponivel para extração!!");
                 this.getDezenasPrimeiroSorteio();
                 this.getDezenasSegundoSoteio();
