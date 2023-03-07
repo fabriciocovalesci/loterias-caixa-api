@@ -42,6 +42,9 @@ export class Lottery {
     dezenasOrdemSorteio?: string[];
 
     @ApiProperty()
+    trevosSorteados?: string[];
+
+    @ApiProperty()
     estadosPremiados?: estadosPremiados[];
 
     @ApiProperty()

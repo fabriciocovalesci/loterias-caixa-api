@@ -24,6 +24,7 @@ export interface Loteria {
     dezenas?: string[];
     dezenasSegundoSorteio?: string[];
     dezenasOrdemSorteio?: string[];
+    trevosSorteados?: string[];
     estadosPremiados?: estadosPremiados[];
     local?: string;
     loteria?: string;

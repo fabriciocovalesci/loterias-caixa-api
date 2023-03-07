@@ -5,6 +5,7 @@ import { MongoDiaDeSorteRepository } from './repositories/mongo/mongo.diadesorte
 import { MongoDulpaSenaRepository } from './repositories/mongo/mongo.duplasena.repository';
 import { MongoLotofacilRepository } from './repositories/mongo/mongo.lotofacil.repository';
 import { MongoLotomaniaRepository } from './repositories/mongo/mongo.lotomania.repository';
+import { MongoMaisMilionariaRepository } from './repositories/mongo/mongo.maismilionaria.repository';
 import { MongoMegasenaRepository } from './repositories/mongo/mongo.megasena.repository';
 import { MongoQuinaRepository } from './repositories/mongo/mongo.quina.repository';
 import { MongoSuperSeteRepository } from './repositories/mongo/mongo.supersete.repository';
@@ -25,7 +26,8 @@ export class LotteryService {
     private duplasena: MongoDulpaSenaRepository,
     private diadesorte: MongoDiaDeSorteRepository,
     private supersete: MongoSuperSeteRepository,
-    private timemania: MongoTimemaniaRepository
+    private timemania: MongoTimemaniaRepository,
+    private maismilionaria: MongoMaisMilionariaRepository
     ){}
 
 
@@ -49,6 +51,8 @@ export class LotteryService {
         return this.diadesorte;
       case "supersete":
         return this.supersete;
+      case "maismilionaria":
+        return this.maismilionaria;
     }
   }
 

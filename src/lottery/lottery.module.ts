@@ -21,6 +21,8 @@ import { MongoDiaDeSorteRepository } from './repositories/mongo/mongo.diadesorte
 import { MongoLotofacilRepository } from './repositories/mongo/mongo.lotofacil.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HttpModule } from '@nestjs/axios';
+import { MongoMaisMilionariaRepository } from './repositories/mongo/mongo.maismilionaria.repository';
+import { MaisMilionaria, MaisMilionariaSchema } from './schemas/mais-milionaria.schema';
 
 
 @Module({
@@ -34,7 +36,8 @@ import { HttpModule } from '@nestjs/axios';
       { name: Quina.name, schema: QuinaSchema },
       { name: Timemania.name, schema: TimemaniaSchema },
       { name: DiaDeSorte.name, schema: DiaDeSorteSchema },
-      { name: SuperSete.name, schema: SuperSeteSchema }
+      { name: SuperSete.name, schema: SuperSeteSchema },
+      { name: MaisMilionaria.name, schema: MaisMilionariaSchema }
     ]),
   ],
   controllers: [LotteryController],
@@ -48,6 +51,7 @@ import { HttpModule } from '@nestjs/axios';
     MongoSuperSeteRepository,
     MongoTimemaniaRepository,
     MongoDiaDeSorteRepository,
+    MongoMaisMilionariaRepository
   ],
   exports: [
     MongoLotofacilRepository,
@@ -57,7 +61,8 @@ import { HttpModule } from '@nestjs/axios';
     MongoQuinaRepository,
     MongoSuperSeteRepository,
     MongoTimemaniaRepository,
-    MongoDiaDeSorteRepository
+    MongoDiaDeSorteRepository,
+    MongoMaisMilionariaRepository
   ],
 })
 export class LotteryModule { }
