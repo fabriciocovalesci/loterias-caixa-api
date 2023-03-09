@@ -21,6 +21,8 @@ import { MongoDiaDeSorteRepository } from 'src/lottery/repositories/mongo/mongo.
 import { MongoTimemaniaRepository } from 'src/lottery/repositories/mongo/mongo.timemania.repository';
 import { MongoSuperSeteRepository } from 'src/lottery/repositories/mongo/mongo.supersete.repository';
 import { MongoDulpaSenaRepository } from 'src/lottery/repositories/mongo/mongo.duplasena.repository';
+import { MongoMaisMilionariaRepository } from 'src/lottery/repositories/mongo/mongo.maismilionaria.repository';
+import { MaisMilionariaSpyder } from './spyders/mais-milionaria.spyder';
 
 
 @Injectable()
@@ -39,6 +41,7 @@ export class ScraperService {
         private timemaniaRepository : MongoTimemaniaRepository,
         private superseteRepository : MongoSuperSeteRepository,
         private duplasenaRepository : MongoDulpaSenaRepository,
+        private maismilionariaRepository: MongoMaisMilionariaRepository,
         @Inject("EventEmitter")
         private eventEmitter: EventEmitter
         ) {}
@@ -177,6 +180,24 @@ export class ScraperService {
         if (duplasena && duplasenaMongo?.concurso < duplasena?.concurso){
             this.eventEmitter.emit('duplasena.created', new LoteriaCreatedEvent(duplasena));
            this.logger.log(`Inserindo no banco de dados, concurso ${duplasena?.concurso}.`)
+        }
+    }
+
+
+    @Cron("*/15 21-23 * * 6")
+    async crawlerMaisMilionaria(){
+        this.logger.warn("Running Cron job - Mais Milionaria");
+
+        const maismilionariaMongo: any = await this.maismilionariaRepository.findLatest();
+    
+        const url = `${this.baseUrl}/mais-milionaria/resultado.php?concurso=${maismilionariaMongo?.proxConcurso}`;
+        const html = await (await firstValueFrom(this.http.get(url))).data;
+        const scrapper = new MaisMilionariaSpyder(html, maismilionariaMongo?.concurso);
+        const maismilionaria: Loteria = scrapper.start();
+ 
+        if (maismilionaria && maismilionariaMongo?.concurso < maismilionaria?.concurso){
+            this.eventEmitter.emit('maismilionaria.created', new LoteriaCreatedEvent(maismilionaria));
+           this.logger.log(`Inserindo no banco de dados, concurso ${maismilionaria?.concurso}.`)
         }
     }
 

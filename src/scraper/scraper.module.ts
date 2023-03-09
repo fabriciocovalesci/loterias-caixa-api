@@ -12,6 +12,7 @@ import { PublishDiaDeSorteScraperCreatedListener } from './listeners/publish-dia
 import { PublishTimemaniaScraperCreatedListener } from './listeners/publish-timemania-created.listener';
 import { PublishSuperSeteScraperCreatedListener } from './listeners/publish-supersete-created.listener';
 import { PublishDuplaSenaScraperCreatedListener } from './listeners/publish-duplasena-created.listener';
+import { PublishMaisMilionariaScraperCreatedListener } from './listeners/publish-maismilionaria-created.listener';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PublishDuplaSenaScraperCreatedListener } from './listeners/publish-dupl
     PublishTimemaniaScraperCreatedListener,
     PublishSuperSeteScraperCreatedListener,
     PublishDuplaSenaScraperCreatedListener,
+    PublishMaisMilionariaScraperCreatedListener,
     {
       provide: 'EventEmitter',
       useExisting: EventEmitter2,
