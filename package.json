@@ -30,6 +30,8 @@
     "@nestjs/schedule": "^2.2.0",
     "@nestjs/swagger": "^6.2.1",
     "cheerio": "^1.0.0-rc.12",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "mongoose": "^6.9.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
