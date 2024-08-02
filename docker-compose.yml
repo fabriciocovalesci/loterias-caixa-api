@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    networks:
+      - app-network
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/app
+       ./dist:/app/dist
+    # command: npm run start:debug
+    depends_on:
+      - svc-mongo
+
+
+  svc-mongo:
+    image: mongo:5.0
+    ports:
+      - '27017:27017'
+    networks:
+     - app-network
+    volumes:
+      - mongo-data:/data/db
+
+
+volumes:
+  mongo-data:
+
+
+networks:
+  app-network:
